@@ -36,10 +36,4 @@ amigo_secreto/
 ├── assets/        # Recursos (imágenes, íconos, etc.)
 ├── app.js         # Lógica del sorteo y manejo de lista
 ├── index.html     # Estructura principal de la página
-└── style.css      # Estilos del proyecto
-
----
-
-## 👨‍💻 Autor
-Miguel Ismerio – @mikeismerio
-Proyecto creado como parte de un challenge práctico de desarrollo web.
+└── style.css      # Estilos del proyecto```

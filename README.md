@@ -38,6 +38,8 @@ amigo_secreto/
 ├── index.html     # Estructura principal de la página
 └── style.css      # Estilos del proyecto
 
-👨‍💻 Autor
+---
+
+## 👨‍💻 Autor
 Miguel Ismerio – @mikeismerio
 Proyecto creado como parte de un challenge práctico de desarrollo web.

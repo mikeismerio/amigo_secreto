@@ -1,13 +1,10 @@
-// app.js — Amigo Secreto
-// Miguel-style: claro, corto y al grano.
-
 const nombres = [];
 
 const caja = document.getElementById("amigo");
 const lista = document.getElementById("listaAmigos");
 const resultado = document.getElementById("resultado");
 
-// Quita acentos y homologa para evitar duplicados tipo "José" vs "jose"
+// Quita acentos y homologa para evitar duplicados
 function llave(str) {
   return str
     .normalize("NFD")
@@ -89,7 +86,6 @@ caja.addEventListener("keydown", (e) => {
   }
 });
 
-// Exponer funciones porque se llaman desde el HTML
 window.agregarAmigo = agregarAmigo;
 window.sortearAmigo = sortearAmigo;
 

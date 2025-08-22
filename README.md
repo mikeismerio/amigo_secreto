@@ -1,39 +1,46 @@
-# 🎁 Amigo Secreto
+🎁 Amigo Secreto  
+HTML5 CSS3 JavaScript  
 
-¡Bienvenido al proyecto **Amigo Secreto**!  
-En este desafío, desarrollarás una **aplicación web interactiva** que permite a los usuarios ingresar nombres de amigos en una lista para luego realizar un **sorteo aleatorio** y determinar quién es el **"amigo secreto"**.
+Aplicación web interactiva en HTML, CSS y JavaScript para ingresar nombres de amigos y realizar un sorteo aleatorio que determine quién es el “amigo secreto”.  
 
----
+🌐 Demo en Vivo  
+¡Prueba la aplicación directamente en tu navegador!  
+[Probar Online](#)  
 
-## ✨ Funcionalidades
+🔍 Tabla de Contenidos  
+- Descripción  
+- Contexto del Proyecto  
+- Características  
+- Vista Previa  
+- Capturas  
+- Tecnologías Utilizadas  
+- Estructura del Proyecto  
+- Aprendizajes  
+- Autor  
 
-- **➕ Agregar nombres:**  
-  Los usuarios escriben el nombre de un amigo en un campo de texto y lo agregan a la lista al hacer clic en el botón **"Adicionar"**.
+📌 Descripción  
+**Amigo Secreto** es una aplicación web que permite ingresar nombres de amigos en una lista y luego sortear aleatoriamente a uno de ellos para asignarle el rol de “amigo secreto”.  
+Su diseño es sencillo, amigable y con validaciones básicas para asegurar una experiencia clara:  
 
-- **⚠️ Validar entrada:**  
-  Si el campo de texto está vacío, el programa muestra una alerta pidiendo que se ingrese un nombre válido.
+- Entrada obligatoria de nombres válidos  
+- Lista visual de amigos agregados  
+- Sorteo aleatorio transparente y directo  
 
-- **📜 Visualizar la lista:**  
-  Los nombres ingresados aparecen en una lista visible debajo del campo de entrada.
+🎓 Contexto del Proyecto  
+Desarrollado como práctica de lógica y manipulación del DOM en JavaScript, enfocado en mejorar habilidades de programación web y construcción de interfaces interactivas.  
 
-- **🎲 Sorteo aleatorio:**  
-  Al hacer clic en el botón **"Sortear Amigo"**, se selecciona aleatoriamente uno de los nombres de la lista y se muestra el resultado en pantalla.
+🚀 Características  
+➕ **Agregar nombres** – Los usuarios pueden añadir amigos mediante un campo de texto y un botón.  
+⚠️ **Validación de entrada** – No permite agregar nombres vacíos ni duplicados.  
+📜 **Visualización en lista** – Los nombres se muestran en una lista visible y actualizada.  
+🎲 **Sorteo aleatorio** – Selecciona de manera aleatoria uno de los nombres y muestra el resultado en pantalla.  
 
----
+🖼️ Vista Previa  
+Vista previa 1 | Vista previa 2 | Vista previa 3  
 
-## 🛠️ Tecnologías utilizadas
+🛠️ Tecnologías Utilizadas  
+- **HTML5** – Estructura principal de la aplicación  
+- **CSS3** – Estilos y diseño visual moderno  
+- **JavaScript (ES6+)** – Lógica de validación, renderizado dinámico y sorteo  
 
-- **HTML5** – Estructura principal del proyecto.  
-- **CSS3** – Estilos para una interfaz atractiva y moderna.  
-- **JavaScript (ES6+)** – Lógica de la aplicación (adición, validación y sorteo).
-
----
-
-## 📂 Estructura del proyecto
-
-```plaintext
-amigo_secreto/
-├── assets/        # Recursos (imágenes, íconos, etc.)
-├── app.js         # Lógica del sorteo y manejo de lista
-├── index.html     # Estructura principal de la página
-└── style.css      # Estilos del proyecto```
+📂 Estructura del Proyecto  

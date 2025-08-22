@@ -1,96 +1,63 @@
+// app.js — versión simple y didáctica
+
+// Estado (la lista de amigos)
 const amigos = [];
-const $input = document.getElementById("amigo");
-const $lista = document.getElementById("listaAmigos");
-const $resultado = document.getElementById("resultado");
-const $avisos = document.getElementById("avisos");
 
-// util: compara sin acentos/mayúsculas
-const llave = (s) =>
-  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+// Referencias al DOM
+const input = document.getElementById("amigo");
+const lista = document.getElementById("listaAmigos");
+const resultado = document.getElementById("resultado");
 
-// toasts
-function aviso(texto, tipo = "info", ms = 2600) {
-  const div = document.createElement("div");
-  div.className = `toast toast--${tipo}`;
-  div.setAttribute("role", "alert");
-  div.textContent = texto;
-  $avisos.appendChild(div);
-  setTimeout(() => div.remove(), ms);
-}
-
-// UI
-function limpiarResultado() { $resultado.innerHTML = ""; }
-
-function pintarLista() {
-  $lista.innerHTML = "";
-  if (amigos.length === 0) return; // chips ya muestran vacío con CSS
-
-  amigos.forEach((nombre, i) => {
+// Pinta la lista de nombres debajo del input
+function actualizarLista() {
+  lista.innerHTML = "";
+  for (const nombre of amigos) {
     const li = document.createElement("li");
     li.textContent = "• " + nombre;
-    li.title = "Clic para eliminar";
-    li.addEventListener("click", () => {
-      amigos.splice(i, 1);
-      limpiarResultado();
-      pintarLista();
-      aviso(`Quitaste "${nombre}"`, "info");
-    });
-    $lista.appendChild(li);
-  });
+    lista.appendChild(li);
+  }
 }
 
-// acciones
-window.agregarAmigo = function () {
-  const texto = $input.value.trim();
+// Limpia el resultado del sorteo
+function limpiarResultado() {
+  resultado.innerHTML = "";
+}
 
-  if (!texto) {
-    $input.classList.add("is-error");
-    aviso("Escribe un nombre válido.", "error");
-    setTimeout(() => $input.classList.remove("is-error"), 900);
-    $input.focus();
+// Agrega un nombre validando que no venga vacío
+function agregarAmigo() {
+  const nombre = input.value.trim();
+
+  if (nombre === "") {
+    alert("Por favor, ingresa un nombre válido.");
+    input.focus();
     return;
   }
 
-  const existe = amigos.some((n) => llave(n) === llave(texto));
-  if (existe) {
-    aviso(`"${texto}" ya está en la lista.`, "info");
-    $input.select();
-    return;
-  }
-
-  amigos.push(texto);
-  $input.value = "";
+  amigos.push(nombre);
+  input.value = "";
   limpiarResultado();
-  pintarLista();
-  aviso(`Agregado: "${texto}"`, "ok");
-  $input.focus();
-};
+  actualizarLista();
+  input.focus();
+}
 
-window.sortearAmigo = function () {
+// Sortea un nombre al azar y lo muestra en pantalla
+function sortearAmigo() {
   if (amigos.length === 0) {
-    $input.classList.add("is-error");
-    aviso("Primero agrega al menos un nombre.", "error");
-    setTimeout(() => $input.classList.remove("is-error"), 900);
-    $input.focus();
+    alert("Primero agrega al menos un nombre.");
+    input.focus();
     return;
   }
-  const i = Math.floor(Math.random() * amigos.length);
-  const elegido = amigos[i];
 
-  $resultado.innerHTML = "";
+  const indice = Math.floor(Math.random() * amigos.length);
+  const elegido = amigos[indice];
+
+  resultado.innerHTML = "";
   const li = document.createElement("li");
-  li.textContent = "🎉  Tu amigo secreto es: " + elegido;
-  $resultado.appendChild(li);
-  aviso("¡Sorteo realizado!", "ok", 1800);
-};
+  li.textContent = "🎉 Tu amigo secreto es: " + elegido;
+  resultado.appendChild(li);
+}
 
-// Enter para agregar
-$input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    agregarAmigo();
-  }
+// Atajo: Enter en el input agrega directo
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") agregarAmigo();
 });
-
-// arranque
-pintarLista();

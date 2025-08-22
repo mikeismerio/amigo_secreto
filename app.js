@@ -1,63 +1,85 @@
-// app.js — versión simple y didáctica
-
-// Estado (la lista de amigos)
+// Estado
 const amigos = [];
 
-// Referencias al DOM
-const input = document.getElementById("amigo");
-const lista = document.getElementById("listaAmigos");
-const resultado = document.getElementById("resultado");
+// Elementos
+const $input = document.getElementById("amigo");
+const $lista = document.getElementById("listaAmigos");
+const $resultado = document.getElementById("resultado");
 
-// Pinta la lista de nombres debajo del input
-function actualizarLista() {
-  lista.innerHTML = "";
-  for (const nombre of amigos) {
+// Normaliza para comparar sin acentos ni mayúsculas
+const llave = (s) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+
+// Dibuja la lista debajo del input
+function pintarLista() {
+  $lista.innerHTML = "";
+  for (let i = 0; i < amigos.length; i++) {
     const li = document.createElement("li");
-    li.textContent = "• " + nombre;
-    lista.appendChild(li);
+    li.textContent = "• " + amigos[i];
+    li.title = "Clic para eliminar";
+    li.style.cursor = "pointer";
+    li.onclick = () => {
+      amigos.splice(i, 1);         // elimina
+      limpiarResultado();
+      pintarLista();
+    };
+    $lista.appendChild(li);
   }
 }
 
 // Limpia el resultado del sorteo
 function limpiarResultado() {
-  resultado.innerHTML = "";
+  $resultado.innerHTML = "";
 }
 
-// Agrega un nombre validando que no venga vacío
+// ---- Funciones que llama tu HTML ----
 function agregarAmigo() {
-  const nombre = input.value.trim();
+  const nombre = $input.value.trim();
 
-  if (nombre === "") {
+  if (!nombre) {
     alert("Por favor, ingresa un nombre válido.");
-    input.focus();
+    $input.focus();
+    return;
+  }
+
+  // Evita duplicados (ej. "José" y "jose" cuentan igual)
+  const yaExiste = amigos.some((n) => llave(n) === llave(nombre));
+  if (yaExiste) {
+    alert(`"${nombre}" ya está en la lista.`);
+    $input.select();
     return;
   }
 
   amigos.push(nombre);
-  input.value = "";
+  $input.value = "";
   limpiarResultado();
-  actualizarLista();
-  input.focus();
+  pintarLista();
+  $input.focus();
 }
 
-// Sortea un nombre al azar y lo muestra en pantalla
 function sortearAmigo() {
   if (amigos.length === 0) {
     alert("Primero agrega al menos un nombre.");
-    input.focus();
+    $input.focus();
     return;
   }
+  const i = Math.floor(Math.random() * amigos.length);
+  const elegido = amigos[i];
 
-  const indice = Math.floor(Math.random() * amigos.length);
-  const elegido = amigos[indice];
-
-  resultado.innerHTML = "";
+  $resultado.innerHTML = ""; // muestra el ganador
   const li = document.createElement("li");
   li.textContent = "🎉 Tu amigo secreto es: " + elegido;
-  resultado.appendChild(li);
+  $resultado.appendChild(li);
 }
 
-// Atajo: Enter en el input agrega directo
-input.addEventListener("keydown", (e) => {
+// Atajo: Enter agrega directo
+$input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") agregarAmigo();
 });
+
+// Pinta estado inicial (lista vacía)
+pintarLista();
+
+// Expone funciones al HTML (por los onclick del index)
+window.agregarAmigo = agregarAmigo;
+window.sortearAmigo = sortearAmigo;

@@ -58,9 +58,9 @@ Desarrollado como práctica de manipulación del DOM con **JavaScript**, enfocad
 ## 🖼️ Vista Previa  
 
 <p align="center">
-  <img src="./assets/preview1.png" alt="Vista previa 1" width="250">
-  <img src="./assets/preview2.png" alt="Vista previa 2" width="250">
-  <img src="./assets/preview3.png" alt="Vista previa 3" width="250">
+  <img src="./assets/preview1.png" alt="Vista previa 1" width="200">
+  <img src="./assets/preview2.png" alt="Vista previa 2" width="200">
+  <img src="./assets/preview3.png" alt="Vista previa 3" width="200">
 </p>
 
 ---

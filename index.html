@@ -13,7 +13,7 @@
   <header class="hero">
     <div class="hero__inner">
       <h1 class="hero__title">Amigo Secreto</h1>
-      <img class="hero__img" src="assets/amigo-secreto.png" alt="Ilustración de persona sosteniendo regalo">
+      <img class="hero__img" src="assets/amigo-secreto.png" alt="Ilustración con un regalo">
     </div>
     <div class="hero__wave" aria-hidden="true"></div>
   </header>
@@ -24,8 +24,10 @@
 
       <div class="form">
         <label class="sr-only" for="amigo">Nombre</label>
-        <input id="amigo" class="input" type="text" placeholder="Escribe un nombre" />
-        <button class="btn btn--dark" onclick="agregarAmigo()">Añadir</button>
+        <div class="input-group">
+          <input id="amigo" class="input" type="text" placeholder="Escribe un nombre" />
+          <button class="btn btn--dark" onclick="agregarAmigo()">Añadir</button>
+        </div>
       </div>
 
       <ul id="listaAmigos" class="chips" role="list" aria-label="Nombres añadidos"></ul>
@@ -34,12 +36,15 @@
 
       <div class="actions">
         <button class="btn btn--primary" onclick="sortearAmigo()" aria-label="Sortear amigo secreto">
-          <img src="assets/play_circle_outline.png" alt="" aria-hidden="true">
+          <span class="btn__icon" aria-hidden="true">▶</span>
           Sortear amigo
         </button>
       </div>
     </section>
   </main>
+
+  <!-- Contenedor de avisos (toasts) -->
+  <div id="avisos" class="toasts" aria-live="assertive" aria-atomic="true"></div>
 
   <script src="app.js" defer></script>
 </body>

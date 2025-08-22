@@ -1,93 +1,96 @@
-const nombres = [];
+const amigos = [];
+const $input = document.getElementById("amigo");
+const $lista = document.getElementById("listaAmigos");
+const $resultado = document.getElementById("resultado");
+const $avisos = document.getElementById("avisos");
 
-const caja = document.getElementById("amigo");
-const lista = document.getElementById("listaAmigos");
-const resultado = document.getElementById("resultado");
+// util: compara sin acentos/mayúsculas
+const llave = (s) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 
-// Quita acentos y homologa para evitar duplicados
-function llave(str) {
-  return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
+// toasts
+function aviso(texto, tipo = "info", ms = 2600) {
+  const div = document.createElement("div");
+  div.className = `toast toast--${tipo}`;
+  div.setAttribute("role", "alert");
+  div.textContent = texto;
+  $avisos.appendChild(div);
+  setTimeout(() => div.remove(), ms);
 }
 
+// UI
+function limpiarResultado() { $resultado.innerHTML = ""; }
+
 function pintarLista() {
-  lista.innerHTML = "";
+  $lista.innerHTML = "";
+  if (amigos.length === 0) return; // chips ya muestran vacío con CSS
 
-  if (nombres.length === 0) {
+  amigos.forEach((nombre, i) => {
     const li = document.createElement("li");
-    li.textContent = "Aún no agregas nombres.";
-    li.style.opacity = "0.7";
-    lista.appendChild(li);
-    return;
-  }
-
-  nombres.forEach((nombre, i) => {
-    const li = document.createElement("li");
-    li.textContent = `• ${nombre}`;
+    li.textContent = "• " + nombre;
     li.title = "Clic para eliminar";
-    li.style.cursor = "pointer";
-
     li.addEventListener("click", () => {
-      nombres.splice(i, 1);
-      resultado.innerHTML = "";
+      amigos.splice(i, 1);
+      limpiarResultado();
       pintarLista();
+      aviso(`Quitaste "${nombre}"`, "info");
     });
-
-    lista.appendChild(li);
+    $lista.appendChild(li);
   });
 }
 
-function agregarAmigo() {
-  const valor = (caja.value || "").trim();
-  if (!valor) {
-    alert("Escribe un nombre válido.");
-    caja.focus();
+// acciones
+window.agregarAmigo = function () {
+  const texto = $input.value.trim();
+
+  if (!texto) {
+    $input.classList.add("is-error");
+    aviso("Escribe un nombre válido.", "error");
+    setTimeout(() => $input.classList.remove("is-error"), 900);
+    $input.focus();
     return;
   }
 
-  const k = llave(valor);
-  if (nombres.some((n) => llave(n) === k)) {
-    alert(`"${valor}" ya está en la lista.`);
-    caja.select();
+  const existe = amigos.some((n) => llave(n) === llave(texto));
+  if (existe) {
+    aviso(`"${texto}" ya está en la lista.`, "info");
+    $input.select();
     return;
   }
 
-  nombres.push(valor);
-  caja.value = "";
-  resultado.innerHTML = "";
+  amigos.push(texto);
+  $input.value = "";
+  limpiarResultado();
   pintarLista();
-  caja.focus();
-}
+  aviso(`Agregado: "${texto}"`, "ok");
+  $input.focus();
+};
 
-function sortearAmigo() {
-  if (nombres.length === 0) {
-    alert("Primero agrega al menos un nombre.");
-    caja.focus();
+window.sortearAmigo = function () {
+  if (amigos.length === 0) {
+    $input.classList.add("is-error");
+    aviso("Primero agrega al menos un nombre.", "error");
+    setTimeout(() => $input.classList.remove("is-error"), 900);
+    $input.focus();
     return;
   }
+  const i = Math.floor(Math.random() * amigos.length);
+  const elegido = amigos[i];
 
-  const i = Math.floor(Math.random() * nombres.length);
-  const elegido = nombres[i];
-
-  resultado.innerHTML = "";
+  $resultado.innerHTML = "";
   const li = document.createElement("li");
-  li.textContent = `🎉 Tu amigo secreto es: ${elegido}`;
-  resultado.appendChild(li);
-}
+  li.textContent = "🎉  Tu amigo secreto es: " + elegido;
+  $resultado.appendChild(li);
+  aviso("¡Sorteo realizado!", "ok", 1800);
+};
 
-// Soporte Enter para agregar
-caja.addEventListener("keydown", (e) => {
+// Enter para agregar
+$input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     agregarAmigo();
   }
 });
 
-window.agregarAmigo = agregarAmigo;
-window.sortearAmigo = sortearAmigo;
-
-// Estado inicial
+// arranque
 pintarLista();

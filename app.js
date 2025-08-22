@@ -1,125 +1,104 @@
-// Lista en memoria
+// Estado
 const amigos = [];
 
-// Referencias a elementos del DOM (una sola vez)
+// Referencias al DOM
 const input = document.getElementById("amigo");
-const listaAmigos = document.getElementById("listaAmigos");
+const lista = document.getElementById("listaAmigos");
 const resultado = document.getElementById("resultado");
+const btnSortear = document.querySelector(".button-draw");
 
-/**
- * Renderiza la lista de amigos en el <ul id="listaAmigos">
- */
-function renderLista() {
-  // Limpiar contenido actual
-  listaAmigos.innerHTML = "";
+// Utilidades
+const normaliza = (s) => s.trim().toLowerCase();
 
-  // Crear cada <li> de forma segura (textContent evita HTML raro)
-  amigos.forEach((nombre, i) => {
+function actualizarUI() {
+  // Render de la lista
+  lista.innerHTML = "";
+  amigos.forEach((nombre, idx) => {
     const li = document.createElement("li");
-    li.textContent = `${i + 1}. ${nombre}`;
-    listaAmigos.appendChild(li);
+    li.textContent = nombre;
+
+    // Botón eliminar
+    const del = document.createElement("button");
+    del.textContent = "✕";
+    del.setAttribute("aria-label", `Eliminar ${nombre}`);
+    del.style.marginLeft = "8px";
+    del.style.padding = "4px 10px";
+    del.style.fontSize = "14px";
+    del.onclick = () => eliminarAmigo(idx);
+
+    li.appendChild(del);
+    lista.appendChild(li);
   });
+
+  // Controlar botón sortear
+  btnSortear.disabled = amigos.length < 2;
+  btnSortear.setAttribute(
+    "aria-disabled",
+    btnSortear.disabled ? "true" : "false"
+  );
 }
 
-/**
- * Muestra un único mensaje en el <ul id="resultado">
- * @param {string} texto - Mensaje a mostrar
- * @param {"ok"|"error"} tipo - Estilo semántico básico
- */
-function mostrarMensaje(texto, tipo = "ok") {
+function mostrarMensaje(mensaje) {
   resultado.innerHTML = "";
   const li = document.createElement("li");
-  li.textContent = texto;
-  // Verde para ok, rojo discreto para error (sin tocar tu CSS base)
-  li.style.color = tipo === "ok" ? "#05DF05" : "#B00020";
+  li.textContent = mensaje;
   resultado.appendChild(li);
 }
 
-/**
- * Limpia el resultado anterior (útil al agregar nombres)
- */
 function limpiarResultado() {
   resultado.innerHTML = "";
 }
 
-/**
- * Normaliza un nombre: recorta espacios y colapsa dobles
- */
-function normalizarNombre(nombre) {
-  return nombre.trim().replace(/\s+/g, " ");
-}
-
-/**
- * Valida nombre simple: letras, acentos y espacios (flexible pero razonable)
- */
-function esNombreValido(nombre) {
-  return /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/.test(nombre);
-}
-
-/**
- * Agrega un amigo desde el input al arreglo y re-renderiza la lista
- * Vinculada al onclick del botón "Añadir" en el HTML
- */
-function agregarAmigo() {
-  limpiarResultado();
-
-  const bruto = input.value;
-  const nombre = normalizarNombre(bruto);
-
-  if (nombre.length === 0) {
-    mostrarMensaje("Primero escribe un nombre, sensei.", "error");
-    input.focus();
-    return;
-  }
-
-  if (!esNombreValido(nombre)) {
-    mostrarMensaje("Solo letras y espacios, por favor. Nada de jeroglíficos.", "error");
-    input.focus();
-    return;
-  }
-
-  // Evitar duplicados (case-insensitive)
-  const existe = amigos.some(n => n.toLowerCase() === nombre.toLowerCase());
-  if (existe) {
-    mostrarMensaje(`"${nombre}" ya está en la lista. No clones.`, "error");
-    input.focus();
-    input.select();
-    return;
-  }
-
-  amigos.push(nombre);
-  renderLista();
-
-  // Reset input
+function limpiarInput() {
   input.value = "";
   input.focus();
 }
 
-/**
- * Sortea un nombre al azar de la lista actual
- * Vinculada al onclick del botón "Sortear amigo"
- */
-function sortearAmigo() {
+// API pública (llamada desde HTML)
+function agregarAmigo() {
   limpiarResultado();
+  const nombre = input.value;
 
-  if (amigos.length < 2) {
-    mostrarMensaje("Necesitas al menos 2 nombres para sortear. Matemáticas básicas.", "error");
+  // Validaciones
+  if (!nombre || !nombre.trim()) {
+    mostrarMensaje("⚠️ Ingresa un nombre válido.");
+    return;
+  }
+  const existe = amigos.some((n) => normaliza(n) === normaliza(nombre));
+  if (existe) {
+    mostrarMensaje("⚠️ Ese nombre ya está en la lista.");
     return;
   }
 
-  const index = Math.floor(Math.random() * amigos.length);
-  const elegido = amigos[index];
-
-  mostrarMensaje(`🎉 Tu amigo secreto es: ${elegido} 🎁`, "ok");
+  amigos.push(nombre.trim());
+  limpiarInput();
+  actualizarUI();
 }
 
-// UX: permitir Enter para agregar rápidamente
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    agregarAmigo();
+function eliminarAmigo(idx) {
+  amigos.splice(idx, 1);
+  actualizarUI();
+}
+
+function sortearAmigo() {
+  limpiarResultado();
+  if (amigos.length < 2) {
+    mostrarMensaje("⚠️ Agrega al menos 2 amigos para sortear.");
+    return;
   }
+  const indice = Math.floor(Math.random() * amigos.length);
+  const ganador = amigos[indice];
+  mostrarMensaje(`🎉 El amigo secreto es: ${ganador}`);
+}
+
+// Eventos
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") agregarAmigo();
 });
 
-// Exponer funciones al scope global porque las invocas desde el HTML inline
+// Inicial
+actualizarUI();
+
+// Exponer funciones globales para que funcionen los onclick del HTML
 window.agregarAmigo = agregarAmigo;
 window.sortearAmigo = sortearAmigo;
